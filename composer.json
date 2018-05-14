@@ -1,0 +1,14 @@
+{
+  "name": "drupal/service_club_asset",
+  "type": "drupal-module",
+  "description": "This module provides functionality to manage assets in an organisation. From associations to asset expiry this module will give event organisers the ability to effectively manage assets at events.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/service_club_asset",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/service_club_asset",
+    "source": "http://cgit.drupalcode.org/service_club_asset"
+  },
+  "require": { }
+}

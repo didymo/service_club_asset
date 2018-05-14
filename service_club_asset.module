@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains service_club_asset.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function service_club_asset_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the service_club_asset module.
+    case 'help.page.service_club_asset':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module provides functionality to manage assets in an organisation. From associations to asset expiry this module will give event organisers the ability to effectively manage assets at events.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function service_club_asset_theme() {
+  return [
+    'service_club_asset' => [
+      'render element' => 'children',
+    ],
+  ];
+}
