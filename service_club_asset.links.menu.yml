@@ -1,0 +1,14 @@
+
+# Asset entity menu items definition
+entity.asset_entity.collection:
+  title: 'Asset entity list'
+  route_name: entity.asset_entity.collection
+  description: 'List Asset entity entities'
+  parent: system.admin_structure
+  weight: 100
+
+asset_entity.admin.structure.settings:
+  title: 'Asset entity settings'
+  description: 'Configure Asset entity entities'
+  route_name: asset_entity.settings
+  parent: system.admin_structure

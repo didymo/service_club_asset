@@ -1,0 +1,27 @@
+# Asset entity routing definition
+asset_entity.settings_tab:
+  route_name: asset_entity.settings
+  title: 'Settings'
+  base_route: asset_entity.settings
+
+entity.asset_entity.canonical:
+  route_name: entity.asset_entity.canonical
+  base_route: entity.asset_entity.canonical
+  title: 'View'
+
+entity.asset_entity.edit_form:
+  route_name: entity.asset_entity.edit_form
+  base_route: entity.asset_entity.canonical
+  title: 'Edit'
+
+entity.asset_entity.version_history:
+  route_name: entity.asset_entity.version_history
+  base_route: entity.asset_entity.canonical
+  title: 'Revisions'
+
+entity.asset_entity.delete_form:
+  route_name:  entity.asset_entity.delete_form
+  base_route:  entity.asset_entity.canonical
+  title: Delete
+  weight: 10
+
