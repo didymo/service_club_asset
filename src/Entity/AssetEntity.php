@@ -201,7 +201,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of author of the Asset entity entity.'))
+      ->setDescription(t('The user ID of the author of the Asset.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
@@ -226,7 +226,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Asset entity entity.'))
+      ->setDescription(t('The name of the Asset.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,
@@ -253,7 +253,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDefaultValue(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'weight' => -3,
+        'weight' => 1,
       ]);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -270,6 +270,90 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setReadOnly(TRUE)
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
+
+    $fields['image'] = BaseFieldDefinition::create('image')
+        ->setLabel(t('Asset Image'))
+        ->setDescription(t('Please provide an image of the asset.'))
+        ->setSettings(['file_directory' => 'image_folder',
+            'alt_field_reindentquired' => FALSE,
+            'file_extensions' => 'png jpg jpeg',
+        ])
+        ->setDisplayOptions('view', array(
+            'label' => 'hidden',
+            'type' => 'default',
+            'weight' => 0,
+        ))
+        ->setDisplayOptions('form', array(
+            'label' => 'hidden',
+            'type' => 'image_image',
+            'weight' => 0,
+        ))
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayConfigurable('view', TRUE);
+
+    $fields['description'] = BaseFieldDefinition::create('string')
+        ->setLabel(t('Asset Description'))
+        ->setDescription(t('Relevant information describing the asset.'))
+        ->setRevisionable(TRUE)
+        ->setSettings([
+            'max_length' => 250,
+            'text_processing' => 0,
+        ])
+        ->setDefaultValue('')
+        ->setDisplayOptions('view', [
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -3,
+        ])
+        ->setDisplayOptions('form', [
+            'type' => 'string_textfield',
+            'weight' => -3,
+        ])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayConfigurable('view', TRUE)
+        ->setRequired(TRUE);
+
+    $fields['price'] = BaseFieldDefinition::create('decimal')
+        ->setLabel(t('Asset Price/Value'))
+        ->setDescription(t('Please provide the asset\'s price'))
+        ->setSettings(array(
+            'precision' => 2,
+            'scale' => 2,
+        ))
+        ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'weight' => -1,
+        ))
+        ->setDisplayOptions('form', array(
+            'type' => 'number',
+            'weight' => -1,
+        ))
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayConfigurable('view', TRUE);
+
+    $fields['expiry_date'] = BaseFieldDefinition::create('datetime')
+        ->setLabel(t('Expiry Date of the Asset'))
+        ->setDescription(t('The date corresponding to an assets expiry.'))
+        ->setRevisionable(TRUE)
+        ->setSettings([
+          'datetime_type' => 'date'
+        ])
+        ->setDefaultValue('')
+        ->setDisplayOptions('view', [
+          'label' => 'above',
+          'type' => 'datetime_default',
+          'settings' => [
+              'format_type' => 'medium',
+          ],
+          'weight' => -1,
+        ])
+        ->setDisplayOptions('form', [
+          'type' => 'datetime_default',
+          'weight' => -1,
+        ])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }
