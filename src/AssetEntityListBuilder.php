@@ -20,6 +20,7 @@ class AssetEntityListBuilder extends EntityListBuilder {
   public function buildHeader() {
     $header['id'] = $this->t('Asset entity ID');
     $header['name'] = $this->t('Name');
+    $header['expiry_date'] = $this->t('Expiry Date');
     return $header + parent::buildHeader();
   }
 
@@ -34,6 +35,7 @@ class AssetEntityListBuilder extends EntityListBuilder {
       'entity.asset_entity.edit_form',
       ['asset_entity' => $entity->id()]
     );
+    $row['expiry_date'] = $entity->getExpiryDate();
     return $row + parent::buildRow($entity);
   }
 

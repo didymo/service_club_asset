@@ -143,6 +143,36 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
   /**
    * {@inheritdoc}
    */
+  public function getDescription() {
+      return $this->get('description')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDescription($description) {
+      $this->set('description', $description);
+      return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExpiryDate() {
+      return $this->get('expiry_date')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setExpiryDate($expiry_date) {
+      $this->set('expiry_date', $expiry_date);
+      return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setCreatedTime($timestamp) {
     $this->set('created', $timestamp);
     return $this;

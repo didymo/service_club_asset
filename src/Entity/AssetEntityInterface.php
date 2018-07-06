@@ -112,4 +112,40 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
    */
   public function setRevisionUserId($uid);
 
+  /**
+   * Gets the description of an asset entity.
+   *
+   * @return string
+   *    Description associated with an asset.
+   */
+  public function getDescription();
+
+  /**
+   * Sets the description for an asset.
+   *
+   * @param string $description
+   *    The assets description
+   *
+   * @return \Drupal\service_club_asset\Entity\AssetEntityInterface
+   *    The called asset entity.
+   */
+  public function setDescription($description);
+
+  /**
+   * Gets the expiry date of an asset.
+   *
+   * @return datetime
+   *    The expiry date that is associated with an asset.
+   */
+  public function getExpiryDate();
+
+  /**
+   * @param datetime $expiry_date
+   *    The assets date and time.
+   *
+   * @return \Drupal\service_club_asset\Entity\AssetEntityInterface
+   *    The called asset entity.
+   */
+  public function setExpiryDate($expiry_date);
+
 }
