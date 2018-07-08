@@ -62,6 +62,7 @@ use Drupal\user\UserInterface;
  *     "revision_delete" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/delete",
  *     "translation_revert" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert/{langcode}",
  *     "collection" = "/admin/structure/asset_entity",
+ *     "clone-asset" = "/admin/structure/asset_entity/{asset_entity}/clone",
  *   },
  *   field_ui_base_route = "asset_entity.settings"
  * )
