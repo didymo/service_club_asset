@@ -39,4 +39,17 @@ class AssetEntityListBuilder extends EntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
+    protected function getDefaultOperations(EntityInterface $entity) {
+        $operations = [];
+        if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
+            $operations['clone'] = [
+                'title' => $this->t('Clone'),
+                'weight' => 1000,
+                'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+            ];
+        }
+
+        return $operations + parent::getDefaultOperations($entity);
+    }
+
 }
