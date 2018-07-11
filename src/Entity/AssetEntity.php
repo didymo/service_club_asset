@@ -62,6 +62,7 @@ use Drupal\user\UserInterface;
  *     "revision_delete" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/delete",
  *     "translation_revert" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert/{langcode}",
  *     "collection" = "/admin/structure/asset_entity",
+ *     "clone-asset" = "/admin/structure/asset_entity/{asset_entity}/clone",
  *   },
  *   field_ui_base_route = "asset_entity.settings"
  * )
@@ -138,6 +139,36 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    */
   public function getCreatedTime() {
     return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+      return $this->get('description')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDescription($description) {
+      $this->set('description', $description);
+      return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExpiryDate() {
+      return $this->get('expiry_date')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setExpiryDate($expiry_date) {
+      $this->set('expiry_date', $expiry_date);
+      return $this;
   }
 
   /**
