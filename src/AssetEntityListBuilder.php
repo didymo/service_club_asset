@@ -44,11 +44,11 @@ class AssetEntityListBuilder extends EntityListBuilder {
    */
   protected function getDefaultOperations(EntityInterface $entity) {
     $operations = [];
-    if ($entity->access('clone') && $entity->hasLinkTemplate('edit-form')) {
+    if ($entity->access('clone') && $entity->hasLinkTemplate('clone-asset')) {
         $operations['clone'] = [
             'title' => $this->t('Clone'),
             'weight' => 1000,
-            'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+            'url' => $this->ensureDestination($entity->toUrl('clone-asset')),
         ];
     }
 
