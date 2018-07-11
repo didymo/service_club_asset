@@ -19,7 +19,7 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
    * Clones an asset.
    *
    * @param \Drupal\service_club_asset\Entity\AssetEntityInterface $asset_entity
-   *   A Asset entity  object.
+   *   A Asset entity object.
    *
    * @return array
    *  Renderable array for the page.
