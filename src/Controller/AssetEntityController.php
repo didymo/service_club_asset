@@ -16,6 +16,24 @@ use Drupal\service_club_asset\Entity\AssetEntityInterface;
 class AssetEntityController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
+   * Clones an asset.
+   *
+   * @param \Drupal\service_club_asset\Entity\AssetEntityInterface $asset_entity
+   *   A Asset entity  object.
+   *
+   * @return array
+   *  Renderable array for the page.
+   */
+  public function cloneAsset(AssetEntityInterface $asset_entity) {
+    $asset_clone = $asset_entity->createDuplicate();
+    $asset_clone->save();
+    $display = array(
+      '#markup' => $asset_entity->getName().' has been cloned.',
+    );
+    return $display;
+  }
+
+  /**
    * Displays a Asset entity  revision.
    *
    * @param int $asset_entity_revision
