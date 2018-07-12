@@ -47,7 +47,7 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
     }
 
     if ($clone_asset_route = $this->getCloneAssetRoute($entity_type)) {
-          $collection->add("entity.$entity_type_id.clone_asset", $clone_asset_route);
+      $collection->add("entity.$entity_type_id.clone_asset", $clone_asset_route);
     }
 
     return $collection;
@@ -59,23 +59,23 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return
+   * @return Symfony\Component\Routing\Route
    *   The generated route, if available.
    */
-    protected function getCloneAssetRoute(EntityTypeInterface $entity_type) {
-        if ($entity_type->hasLinkTemplate('clone-asset')) {
-            $route = new Route($entity_type->getLinkTemplate('clone-asset'));
-            $route
-                ->setDefaults([
-                    '_title' => "Clone Asset",//: {$entity_type->getLabel()}",
-                    '_controller' => '\Drupal\service_club_asset\Controller\AssetEntityController::cloneAsset',
-                ])
-                ->setRequirement('_permission', 'clone asset')
-                ->setOption('_admin_route', TRUE);
+  protected function getCloneAssetRoute(EntityTypeInterface $entity_type) {
+    if ($entity_type->hasLinkTemplate('clone-asset')) {
+      $route = new Route($entity_type->getLinkTemplate('clone-asset'));
+      $route
+        ->setDefaults([
+          '_title' => "Clone Asset",
+          '_controller' => '\Drupal\service_club_asset\Controller\AssetEntityController::cloneAsset',
+        ])
+        ->setRequirement('_permission', 'clone asset')
+        ->setOption('_admin_route', TRUE);
 
-            return $route;
-        }
+      return $route;
     }
+  }
 
   /**
    * Gets the version history route.

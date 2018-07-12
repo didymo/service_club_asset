@@ -2,9 +2,11 @@
 
 namespace Drupal\service_club_asset\Controller;
 
+use Drupal;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\service_club_asset\Entity\AssetEntityInterface;
 
@@ -22,14 +24,22 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
    *   A Asset entity object.
    *
    * @return array
-   *  Renderable array for the page.
+   *   Renderable array for the page.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function cloneAsset(AssetEntityInterface $asset_entity) {
     $asset_clone = $asset_entity->createDuplicate();
-    $asset_clone->save();
-    $display = array(
-      '#markup' => $asset_entity->getName().' has been cloned.',
-    );
+    try {
+      $asset_clone->save();
+    }
+    catch (EntityStorageException $e) {
+      \Draupl::logger('service_club_asset')
+        ->error('Failed to save the clone asset');
+    }
+    $display = [
+      '#markup' => 'Edit cloned asset, ' . $asset_clone->getName() . ', <a href="/admin/structure/asset_entity/">here</a>.',
+    ];
     return $display;
   }
 
@@ -43,7 +53,9 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
    *   An array suitable for drupal_render().
    */
   public function revisionShow($asset_entity_revision) {
-    $asset_entity = $this->entityManager()->getStorage('asset_entity')->loadRevision($asset_entity_revision);
+    $asset_entity = $this->entityManager()
+      ->getStorage('asset_entity')
+      ->loadRevision($asset_entity_revision);
     $view_builder = $this->entityManager()->getViewBuilder('asset_entity');
 
     return $view_builder->view($asset_entity);
@@ -59,8 +71,13 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
    *   The page title.
    */
   public function revisionPageTitle($asset_entity_revision) {
-    $asset_entity = $this->entityManager()->getStorage('asset_entity')->loadRevision($asset_entity_revision);
-    return $this->t('Revision of %title from %date', ['%title' => $asset_entity->label(), '%date' => format_date($asset_entity->getRevisionCreationTime())]);
+    $asset_entity = $this->entityManager()
+      ->getStorage('asset_entity')
+      ->loadRevision($asset_entity_revision);
+    return $this->t('Revision of %title from %date', [
+      '%title' => $asset_entity->label(),
+      '%date' => format_date($asset_entity->getRevisionCreationTime()),
+    ]);
   }
 
   /**
@@ -80,7 +97,10 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
     $has_translations = (count($languages) > 1);
     $asset_entity_storage = $this->entityManager()->getStorage('asset_entity');
 
-    $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $asset_entity->label()]) : $this->t('Revisions for %title', ['%title' => $asset_entity->label()]);
+    $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', [
+      '@langname' => $langname,
+      '%title' => $asset_entity->label(),
+    ]) : $this->t('Revisions for %title', ['%title' => $asset_entity->label()]);
     $header = [$this->t('Revision'), $this->t('Operations')];
 
     $revert_permission = (($account->hasPermission("revert all asset entity revisions") || $account->hasPermission('administer asset entity entities')));
@@ -97,16 +117,21 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
       $revision = $asset_entity_storage->loadRevision($vid);
       // Only show revisions that are affected by the language that is being
       // displayed.
-      if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)->isRevisionTranslationAffected()) {
+      if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)
+          ->isRevisionTranslationAffected()) {
         $username = [
           '#theme' => 'username',
           '#account' => $revision->getRevisionUser(),
         ];
 
         // Use revision link to link to revisions that are not active.
-        $date = \Drupal::service('date.formatter')->format($revision->getRevisionCreationTime(), 'short');
+        $date = Drupal::service('date.formatter')
+          ->format($revision->getRevisionCreationTime(), 'short');
         if ($vid != $asset_entity->getRevisionId()) {
-          $link = $this->l($date, new Url('entity.asset_entity.revision', ['asset_entity' => $asset_entity->id(), 'asset_entity_revision' => $vid]));
+          $link = $this->l($date, new Url('entity.asset_entity.revision', [
+            'asset_entity' => $asset_entity->id(),
+            'asset_entity_revision' => $vid,
+          ]));
         }
         else {
           $link = $asset_entity->link($date);
@@ -119,8 +144,12 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
             '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
             '#context' => [
               'date' => $link,
-              'username' => \Drupal::service('renderer')->renderPlain($username),
-              'message' => ['#markup' => $revision->getRevisionLogMessage(), '#allowed_tags' => Xss::getHtmlTagList()],
+              'username' => Drupal::service('renderer')
+                ->renderPlain($username),
+              'message' => [
+                '#markup' => $revision->getRevisionLogMessage(),
+                '#allowed_tags' => Xss::getHtmlTagList(),
+              ],
             ],
           ],
         ];
@@ -145,15 +174,25 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
             $links['revert'] = [
               'title' => $this->t('Revert'),
               'url' => $has_translations ?
-              Url::fromRoute('entity.asset_entity.translation_revert', ['asset_entity' => $asset_entity->id(), 'asset_entity_revision' => $vid, 'langcode' => $langcode]) :
-              Url::fromRoute('entity.asset_entity.revision_revert', ['asset_entity' => $asset_entity->id(), 'asset_entity_revision' => $vid]),
+                Url::fromRoute('entity.asset_entity.translation_revert', [
+                  'asset_entity' => $asset_entity->id(),
+                  'asset_entity_revision' => $vid,
+                  'langcode' => $langcode,
+                ]) :
+                Url::fromRoute('entity.asset_entity.revision_revert', [
+                  'asset_entity' => $asset_entity->id(),
+                  'asset_entity_revision' => $vid,
+                ]),
             ];
           }
 
           if ($delete_permission) {
             $links['delete'] = [
               'title' => $this->t('Delete'),
-              'url' => Url::fromRoute('entity.asset_entity.revision_delete', ['asset_entity' => $asset_entity->id(), 'asset_entity_revision' => $vid]),
+              'url' => Url::fromRoute('entity.asset_entity.revision_delete', [
+                'asset_entity' => $asset_entity->id(),
+                'asset_entity_revision' => $vid,
+              ]),
             ];
           }
 
