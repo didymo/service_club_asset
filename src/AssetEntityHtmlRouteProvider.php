@@ -68,7 +68,7 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route
         ->setDefaults([
           '_title' => "Clone Asset",
-          '_controller' => '\Drupal\service_club_asset\Controller\AssetEntityController::cloneAsset',
+          '_form' => '\Drupal\service_club_asset\Form\CloneAssetForm',
         ])
         ->setRequirement('_permission', 'clone asset')
         ->setOption('_admin_route', TRUE);

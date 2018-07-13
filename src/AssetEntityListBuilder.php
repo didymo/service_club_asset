@@ -13,7 +13,6 @@ use Drupal\Core\Link;
  */
 class AssetEntityListBuilder extends EntityListBuilder {
 
-
   /**
    * {@inheritdoc}
    */
