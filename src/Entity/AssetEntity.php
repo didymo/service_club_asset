@@ -23,7 +23,8 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\service_club_asset\AssetEntityListBuilder",
  *     "views_data" = "Drupal\service_club_asset\Entity\AssetEntityViewsData",
- *     "translation" = "Drupal\service_club_asset\AssetEntityTranslationHandler",
+ *     "translation" =
+ *   "Drupal\service_club_asset\AssetEntityTranslationHandler",
  *
  *     "form" = {
  *       "default" = "Drupal\service_club_asset\Form\AssetEntityForm",
@@ -56,11 +57,16 @@ use Drupal\user\UserInterface;
  *     "add-form" = "/admin/structure/asset_entity/add",
  *     "edit-form" = "/admin/structure/asset_entity/{asset_entity}/edit",
  *     "delete-form" = "/admin/structure/asset_entity/{asset_entity}/delete",
- *     "version-history" = "/admin/structure/asset_entity/{asset_entity}/revisions",
- *     "revision" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/view",
- *     "revision_revert" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert",
- *     "revision_delete" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/delete",
- *     "translation_revert" = "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert/{langcode}",
+ *     "version-history" =
+ *   "/admin/structure/asset_entity/{asset_entity}/revisions",
+ *     "revision" =
+ *   "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/view",
+ *     "revision_revert" =
+ *   "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert",
+ *     "revision_delete" =
+ *   "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/delete",
+ *     "translation_revert" =
+ *   "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert/{langcode}",
  *     "collection" = "/admin/structure/asset_entity",
  *     "clone-asset" = "/admin/structure/asset_entity/{asset_entity}/clone",
  *   },
@@ -112,8 +118,8 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       }
     }
 
-    // If no revision author has been set explicitly, make the asset_entity owner the
-    // revision author.
+    // If no revision author has been set explicitly, make the asset_entity
+    // owner the revision author.
     if (!$this->getRevisionUser()) {
       $this->setRevisionUserId($this->getOwnerId());
     }
@@ -145,30 +151,30 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    * {@inheritdoc}
    */
   public function getDescription() {
-      return $this->get('description')->value;
+    return $this->get('description')->value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setDescription($description) {
-      $this->set('description', $description);
-      return $this;
+    $this->set('description', $description);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getExpiryDate() {
-      return $this->get('expiry_date')->value;
+    return $this->get('expiry_date')->value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setExpiryDate($expiry_date) {
-      $this->set('expiry_date', $expiry_date);
-      return $this;
+    $this->set('expiry_date', $expiry_date);
+    return $this;
   }
 
   /**
@@ -303,95 +309,96 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setTranslatable(TRUE);
 
     $fields['image'] = BaseFieldDefinition::create('image')
-        ->setLabel(t('Asset Image'))
-        ->setDescription(t('Please provide an image of the asset.'))
-        ->setSettings(['file_directory' => 'image_folder',
-            'alt_field_reindentquired' => FALSE,
-            'file_extensions' => 'png jpg jpeg',
-        ])
-        ->setDisplayOptions('view', array(
-            'label' => 'hidden',
-            'type' => 'default',
-            'weight' => 0,
-        ))
-        ->setDisplayOptions('form', array(
-            'label' => 'hidden',
-            'type' => 'image_image',
-            'weight' => 0,
-        ))
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayConfigurable('view', TRUE);
+      ->setLabel(t('Asset Image'))
+      ->setDescription(t('Please provide an image of the asset.'))
+      ->setSettings([
+        'file_directory' => 'image_folder',
+        'alt_field_reindentquired' => FALSE,
+        'file_extensions' => 'png jpg jpeg',
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'default',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'label' => 'hidden',
+        'type' => 'image_image',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('string')
-        ->setLabel(t('Asset Description'))
-        ->setDescription(t('Relevant information describing the asset.'))
-        ->setRevisionable(TRUE)
-        ->setSettings([
-            'max_length' => 250,
-            'text_processing' => 0,
-        ])
-        ->setDefaultValue('')
-        ->setDisplayOptions('view', [
-            'label' => 'above',
-            'type' => 'string',
-            'weight' => -3,
-        ])
-        ->setDisplayOptions('form', [
-            'type' => 'string_textfield',
-            'weight' => -3,
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayConfigurable('view', TRUE)
-        ->setRequired(TRUE);
+      ->setLabel(t('Asset Description'))
+      ->setDescription(t('Relevant information describing the asset.'))
+      ->setRevisionable(TRUE)
+      ->setSettings([
+        'max_length' => 250,
+        'text_processing' => 0,
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -3,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -3,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
 
     /**
-    * @Todo change the type from decimal to something more appropriate such as String, price or Integer.
-    *
-    * The limitation of using decimal is that you cannot store an 8 digit number or large
-    * 7 digit numbers as it is causing issues for storage.
+     * @Todo change the type from decimal to something more appropriate such as String, price or Integer.
+     *
+     * The limitation of using decimal is that you cannot store an 8 digit
+     * number or large 7 digit numbers as it is causing issues for storage.
      */
     $fields['price'] = BaseFieldDefinition::create('decimal')
-        ->setLabel(t('Asset Price/Value'))
-        ->setDescription(t('Please provide the asset\'s price'))
-        ->setSettings(array(
-            'type' => 'numeric',
-            'precision' => 32,
-            'scale' => 2,
-        ))
-        ->setDisplayOptions('view', array(
-            'label' => 'above',
-            'type' => 'numeric',
-            'weight' => -1,
-        ))
-        ->setDisplayOptions('form', array(
-            'type' => 'numeric',
-            'weight' => -1,
-        ))
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayConfigurable('view', TRUE);
+      ->setLabel(t('Asset Price/Value'))
+      ->setDescription(t("Please provide the asset\'s price"))
+      ->setSettings([
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'numeric',
+        'weight' => -1,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'numeric',
+        'weight' => -1,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['expiry_date'] = BaseFieldDefinition::create('datetime')
-        ->setLabel(t('Expiry Date of the Asset'))
-        ->setDescription(t('The date corresponding to an assets expiry.'))
-        ->setRevisionable(TRUE)
-        ->setSettings([
-          'datetime_type' => 'date'
-        ])
-        ->setDefaultValue('')
-        ->setDisplayOptions('view', [
-          'label' => 'above',
-          'type' => 'datetime_default',
-          'settings' => [
-              'format_type' => 'medium',
-          ],
-          'weight' => -1,
-        ])
-        ->setDisplayOptions('form', [
-          'type' => 'datetime_default',
-          'weight' => -1,
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayConfigurable('view', TRUE);
+      ->setLabel(t('Expiry Date of the Asset'))
+      ->setDescription(t('The date corresponding to an assets expiry.'))
+      ->setRevisionable(TRUE)
+      ->setSettings([
+        'datetime_type' => 'date',
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'datetime_default',
+        'settings' => [
+          'format_type' => 'medium',
+        ],
+        'weight' => -1,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'datetime_default',
+        'weight' => -1,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }
