@@ -21,13 +21,28 @@ class CloneAssetForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Confirm clone'),
-    ];
+    // Create and array specifiying the values for the list.
+    $cloneListElement = array(
+      1 => $this->t('One'),
+      2 => $this->t('Two'),
+      3 => $this->t('Three'),
+      4 => $this->t('Four'),
+      5 => $this->t('Five'),
+    );
 
+    // Add list element to $form.
+    $form['cloneAsset'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Select number of clones'),
+      '#default_value' => 1,
+      '#options' => $cloneListElement,
+      '#description' => $this->t('Select number of clones to generate.'),
+    );
+
+    // Specify the submit button.
     $form['submit'] = [
       '#type' => 'submit',
+      '#title' => 'Confirm the number of clones.',
       '#value' => $this->t('Confirm clone'),
     ];
 
@@ -41,7 +56,7 @@ class CloneAssetForm extends FormBase {
 
     print_r('hi');
 
-    \Drupal::logger('submitForm channel')->error('hit the submitForm Section');
+    $this->logger('submitForm channel')->error('hit the submitForm Section');
     //$entity = $this->entity;
     //$form_state->setRedirect('entity.asset_entity.canonical', ['asset_entity' => $entity->id()]);
   }
@@ -66,9 +81,12 @@ class CloneAssetForm extends FormBase {
       drupal_set_message($key . ': ' . $value);
     }
 
-    \Drupal::logger('submitForm channel')->error('hit the submitForm Section');
+    $this->logger('submitForm channel')->error('hit the submitForm Section');
+    $this->logger('submitForm channel2')->error('');
     //$entity = $this->entity;
     //$form_state->setRedirect('entity.asset_entity.canonical', ['asset_entity' => $entity->id()]);
+
+
 
   }
 
