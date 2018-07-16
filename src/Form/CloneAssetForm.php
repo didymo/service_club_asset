@@ -31,7 +31,7 @@ class CloneAssetForm extends FormBase {
     );
 
     // Add list element to $form.
-    $form['cloneAsset'] = array(
+    $form['numberOfClones'] = array(
       '#type' => 'select',
       '#title' => $this->t('Select number of clones'),
       '#default_value' => 1,
@@ -76,17 +76,16 @@ class CloneAssetForm extends FormBase {
    * \Drupal\Core\Messenger\MessengerInterface::addMessage()
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Array to store given form values.
+    $extracted = [];
+
     // Display result.
     foreach ($form_state->getValues() as $key => $value) {
       drupal_set_message($key . ': ' . $value);
+      $extracted[$key] = $value;
     }
 
-    $this->logger('submitForm channel')->error('hit the submitForm Section');
-    $this->logger('submitForm channel2')->error('');
-    //$entity = $this->entity;
-    //$form_state->setRedirect('entity.asset_entity.canonical', ['asset_entity' => $entity->id()]);
-
-
+    $this->logger('submitForm channel')->error('the value: ' . $extracted['numberOfClones']);
 
   }
 
