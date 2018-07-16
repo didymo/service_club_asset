@@ -67,7 +67,8 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
    * Sets the published status of a Asset entity.
    *
    * @param bool $published
-   *   TRUE to set this Asset entity to published, FALSE to set it to unpublished.
+   *   TRUE to set this Asset entity to published, FALSE to set it to
+   *   unpublished.
    *
    * @return \Drupal\service_club_asset\Entity\AssetEntityInterface
    *   The called Asset entity entity.
@@ -116,7 +117,7 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
    * Gets the description of an asset entity.
    *
    * @return string
-   *    Description associated with an asset.
+   *   Description associated with an asset.
    */
   public function getDescription();
 
@@ -124,10 +125,10 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
    * Sets the description for an asset.
    *
    * @param string $description
-   *    The assets description
+   The assets description
    *
    * @return \Drupal\service_club_asset\Entity\AssetEntityInterface
-   *    The called asset entity.
+   *   The called asset entity.
    */
   public function setDescription($description);
 
@@ -135,16 +136,18 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
    * Gets the expiry date of an asset.
    *
    * @return datetime
-   *    The expiry date that is associated with an asset.
+   *   The expiry date that is associated with an asset.
    */
   public function getExpiryDate();
 
   /**
+   * Set the expiry Date of an asset.
+   *
    * @param datetime $expiry_date
-   *    The assets date and time.
+   *   The assets date and time.
    *
    * @return \Drupal\service_club_asset\Entity\AssetEntityInterface
-   *    The called asset entity.
+   *   The called asset entity.
    */
   public function setExpiryDate($expiry_date);
 
