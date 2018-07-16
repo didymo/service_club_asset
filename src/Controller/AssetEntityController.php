@@ -6,7 +6,6 @@ use Drupal;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\service_club_asset\Entity\AssetEntityInterface;
 
@@ -16,32 +15,6 @@ use Drupal\service_club_asset\Entity\AssetEntityInterface;
  *  Returns responses for Asset entity routes.
  */
 class AssetEntityController extends ControllerBase implements ContainerInjectionInterface {
-
-  /**
-   * Clones an asset.
-   *
-   * @param \Drupal\service_club_asset\Entity\AssetEntityInterface $asset_entity
-   *   A Asset entity object.
-   *
-   * @return array
-   *   Renderable array for the page.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function cloneAsset(AssetEntityInterface $asset_entity) {
-    $asset_clone = $asset_entity->createDuplicate();
-    try {
-      $asset_clone->save();
-    }
-    catch (EntityStorageException $e) {
-      $this->logger('service_club_asset')
-        ->error('Failed to save the clone asset');
-    }
-    $display = [
-      '#markup' => 'Edit cloned asset, ' . $asset_clone->getName() . ', <a href="/admin/structure/asset_entity/">here</a>.',
-    ];
-    return $display;
-  }
 
   /**
    * Displays a Asset entity  revision.
