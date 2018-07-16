@@ -4,6 +4,8 @@ namespace Drupal\service_club_asset\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\service_club_asset\Entity\AssetEntity;
+use Drupal\Core\Entity\EntityStorageException;
 
 /**
  * Class CloneAssetForm.
@@ -52,18 +54,6 @@ class CloneAssetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  function test() {
-
-    print_r('hi');
-
-    $this->logger('submitForm channel')->error('hit the submitForm Section');
-    //$entity = $this->entity;
-    //$form_state->setRedirect('entity.asset_entity.canonical', ['asset_entity' => $entity->id()]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
   }
@@ -85,8 +75,39 @@ class CloneAssetForm extends FormBase {
       $extracted[$key] = $value;
     }
 
-    $this->logger('submitForm channel')->error('the value: ' . $extracted['numberOfClones']);
+    // Get the id of the asset you are trying to currently clone.
+    $assetId = $this->getRouteMatch()->getParameter('asset_entity');
 
+    // Load the asset into scope so that cloning can be done on it.
+    $originalAsset = AssetEntity::load($assetId);
+
+    // Create a number of clones decided by the user.
+    for ($cloneCounter = 0; $cloneCounter < $extracted['numberOfClones']; $cloneCounter++) {
+      // Create a clone of the asset.
+      $this->cloneAsset($originalAsset);
+      $this->logger('CloneAssetForm')
+        ->error('TESTESTTESTETESTETEST');
+    }
+
+  }
+
+  /**
+   * Clones an asset.
+   *
+   * @param \Drupal\service_club_asset\Entity\AssetEntity $asset_entity
+   *   A Asset entity object.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function cloneAsset(AssetEntity $asset_entity) {
+    $asset_clone = $asset_entity->createDuplicate();
+    try {
+      $asset_clone->save();
+    }
+    catch (EntityStorageException $e) {
+      $this->logger('CloneAssetForm')
+        ->error('Failed to save the clone asset');
+    }
   }
 
 }
