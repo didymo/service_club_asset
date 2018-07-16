@@ -71,7 +71,6 @@ class CloneAssetForm extends FormBase {
 
     // Display result.
     foreach ($form_state->getValues() as $key => $value) {
-      drupal_set_message($key . ': ' . $value);
       $extracted[$key] = $value;
     }
 
@@ -85,9 +84,9 @@ class CloneAssetForm extends FormBase {
     for ($cloneCounter = 0; $cloneCounter < $extracted['numberOfClones']; $cloneCounter++) {
       // Create a clone of the asset.
       $this->cloneAsset($originalAsset);
-      $this->logger('CloneAssetForm')
-        ->error('TESTESTTESTETESTETEST');
     }
+
+    drupal_set_message($originalAsset->getName() . ' has been cloned');
 
   }
 
