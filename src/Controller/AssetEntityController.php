@@ -34,7 +34,7 @@ class AssetEntityController extends ControllerBase implements ContainerInjection
       $asset_clone->save();
     }
     catch (EntityStorageException $e) {
-      \Drupal::logger('service_club_asset')
+      $this->logger('service_club_asset')
         ->error('Failed to save the clone asset');
     }
     $display = [
