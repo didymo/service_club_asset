@@ -12,3 +12,9 @@ asset_entity.admin.structure.settings:
   description: 'Configure Asset entity entities'
   route_name: asset_entity.settings
   parent: system.admin_structure
+
+asset_entity.view_assets:
+  title: 'View Assets'
+  route_name: entity.asset_entity.collection
+  parent: main
+  menu_name: main
