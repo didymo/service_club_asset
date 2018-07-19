@@ -329,7 +329,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['description'] = BaseFieldDefinition::create('string')
+    $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Asset Description'))
       ->setDescription(t('Relevant information describing the asset.'))
       ->setRevisionable(TRUE)
