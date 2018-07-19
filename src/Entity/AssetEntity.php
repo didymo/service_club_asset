@@ -351,8 +351,9 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    /**
-     * @Todo change the type from decimal to something more appropriate such as String, price or Integer.
+    /*
+     * @Todo change the type from decimal to something more appropriate such
+     * as String, price or Integer.
      *
      * The limitation of using decimal is that you cannot store an 8 digit
      * number or large 7 digit numbers as it is causing issues for storage.
@@ -379,7 +380,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
 
     $fields['expiry_date'] = BaseFieldDefinition::create('datetime')
       ->setLabel(t('Expiry Date of the Asset'))
-      ->setDescription(t('The date corresponding to an assets expiry.'))
+      ->setDescription(t('The date corresponding to an assets expiry date.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'datetime_type' => 'date',
@@ -389,13 +390,16 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
         'label' => 'above',
         'type' => 'datetime_default',
         'settings' => [
-          'format_type' => 'medium',
+          'format_type' => 'html_date',
         ],
         'weight' => -1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'datetime_default',
         'weight' => -1,
+        'settings' => [
+          'format_type' => 'html_date',
+        ],
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
