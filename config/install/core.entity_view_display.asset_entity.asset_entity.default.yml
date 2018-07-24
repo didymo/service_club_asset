@@ -1,0 +1,68 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.asset_entity.asset_entity.field_expiry_date
+  module:
+    - datetime
+    - image
+    - service_club_asset
+    - text
+    - user
+_core:
+  default_config_hash: bJnlA9Ut_-ywUiIP2zZn2Ac5odPUnRnCYihF6MF5zrM
+id: asset_entity.asset_entity.default
+targetEntityType: asset_entity
+bundle: asset_entity
+mode: default
+content:
+  description:
+    label: above
+    type: text_trimmed
+    weight: 1
+    region: content
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+  field_expiry_date:
+    type: datetime_default
+    weight: 3
+    region: content
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+  image:
+    label: hidden
+    type: image
+    weight: 5
+    region: content
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+  name:
+    label: above
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  price:
+    label: above
+    type: number_unformatted
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  user_id:
+    label: hidden
+    type: author
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
+
