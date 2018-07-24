@@ -317,6 +317,14 @@ display:
             default_group_multiple: {  }
             group_items:
               1:
+                title: Expired
+                operator: '<'
+                value:
+                  type: offset
+                  value: '+ 0 day'
+                  min: ''
+                  max: ''
+              2:
                 title: '0 - 3 months'
                 operator: between
                 value:
@@ -324,7 +332,7 @@ display:
                   value: ''
                   min: '+ 0 day'
                   max: '+ 90 day'
-              2:
+              3:
                 title: '3 - 6 moths'
                 operator: between
                 value:
@@ -332,7 +340,7 @@ display:
                   value: ''
                   min: '+ 91 day'
                   max: '+ 180 day'
-              3:
+              4:
                 title: '6 - 12 months'
                 operator: between
                 value:
