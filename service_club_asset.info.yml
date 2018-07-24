@@ -3,3 +3,5 @@ type: module
 description: 'This module provides functionality to manage assets in an organisation. From associations to asset expiry this module will give event organisers the ability to effectively manage assets at events.'
 core: 8.x
 package: 'Service Club'
+dependencies:
+    - views
