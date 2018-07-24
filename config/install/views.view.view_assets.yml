@@ -8,7 +8,7 @@ dependencies:
     - datetime
     - service_club_asset
 _core:
-  default_config_hash: mGeJC9kbEi5w54ddjRnv73p_2m717djxSQcBTqwlJoo
+  default_config_hash: ecBUuiZQ1mHBa71-Hq0k2RX6YEAlZwx_BTDdCCJtIkQ
 id: view_assets
 label: 'View Assets'
 module: views
@@ -330,7 +330,7 @@ display:
                 value:
                   type: offset
                   value: ''
-                  min: '+ 90 day'
+                  min: '+ 91 day'
                   max: '+ 180 day'
               3:
                 title: '6 - 12 months'
@@ -338,10 +338,37 @@ display:
                 value:
                   type: offset
                   value: ''
-                  min: '+ 180 day'
+                  min: '+ 181 day'
                   max: '+ 365 day'
           plugin_id: datetime
-      sorts: {  }
+      sorts:
+        field_expiry_date_value:
+          id: field_expiry_date_value
+          table: asset_entity__field_expiry_date
+          field: field_expiry_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          granularity: day
+          plugin_id: datetime
+        name:
+          id: name
+          table: asset_entity_field_data
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: asset_entity
+          entity_field: name
+          plugin_id: standard
       title: 'View Assets'
       header: {  }
       footer: {  }
@@ -379,4 +406,3 @@ display:
         - url.query_args
       tags:
         - 'config:field.storage.asset_entity.field_expiry_date'
-
