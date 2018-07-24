@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.asset_entity.field_expiry_date
+  module:
+    - datetime
+    - service_club_asset
+_core:
+  default_config_hash: TU-lz_kiU-OLzdRiMANKcmFAoSjFQW2GfyBn3W1jY2g
+id: asset_entity.asset_entity.field_expiry_date
+field_name: field_expiry_date
+entity_type: asset_entity
+bundle: asset_entity
+label: 'Expiry Date'
+description: 'Please provide the expiry date of the asset if it applies otherwise leave blank.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime
+

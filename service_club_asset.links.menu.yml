@@ -14,7 +14,7 @@ asset_entity.admin.structure.settings:
   parent: system.admin_structure
 
 asset_entity.view_assets:
-  title: 'View Assets'
+  title: 'Add Asset'
   route_name: entity.asset_entity.collection
   parent: main
   menu_name: main

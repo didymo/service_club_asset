@@ -166,7 +166,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    * {@inheritdoc}
    */
   public function getExpiryDate() {
-    return $this->get('expiry_date')->value;
+    return $this->get('field_expiry_date')->value;
   }
 
   /**
@@ -329,7 +329,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['description'] = BaseFieldDefinition::create('string')
+    $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Asset Description'))
       ->setDescription(t('Relevant information describing the asset.'))
       ->setRevisionable(TRUE)
@@ -351,8 +351,9 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    /**
-     * @Todo change the type from decimal to something more appropriate such as String, price or Integer.
+    /*
+     * @Todo change the type from decimal to something more appropriate such
+     * as String, price or Integer.
      *
      * The limitation of using decimal is that you cannot store an 8 digit
      * number or large 7 digit numbers as it is causing issues for storage.
@@ -377,28 +378,30 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    /*
+     * @Todo the current version of drupal doesn't allow implementations of
+     * datetime to function the way it's required in this module. Expiry
+     * date has been implemented using the configuration exports but should be
+     * implemented programmatically if and when possible.
+     *
     $fields['expiry_date'] = BaseFieldDefinition::create('datetime')
-      ->setLabel(t('Expiry Date of the Asset'))
-      ->setDescription(t('The date corresponding to an assets expiry.'))
-      ->setRevisionable(TRUE)
-      ->setSettings([
-        'datetime_type' => 'date',
-      ])
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'datetime_default',
-        'settings' => [
-          'format_type' => 'medium',
-        ],
-        'weight' => -1,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'datetime_default',
-        'weight' => -1,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+    ->setLabel(t('Expiry Date of the Asset'))
+    ->setDescription(t('The date corresponding to an assets expiry date.'))
+    ->setRevisionable(TRUE)
+    ->setSettings([
+    'datetime_type' => 'datetime',
+    'offset' => TRUE,
+    ])
+    ->setDisplayOptions('view', [
+    'label' => 'above',
+    'weight' => -1,
+    ])
+    ->setDisplayOptions('form', [
+    'weight' => -1,
+    ])
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+     */
 
     return $fields;
   }

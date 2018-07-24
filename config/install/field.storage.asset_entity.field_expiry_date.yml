@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - service_club_asset
+_core:
+  default_config_hash: m--Lk5Q5OGkTM4pbElfgqkkZ6NfsE9vp1cECnDKB_2s
+id: asset_entity.field_expiry_date
+field_name: field_expiry_date
+entity_type: asset_entity
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
+
