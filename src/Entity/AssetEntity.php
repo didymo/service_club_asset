@@ -166,7 +166,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    * {@inheritdoc}
    */
   public function getExpiryDate() {
-    return $this->get('expiry_date')->value;
+    return $this->get('field_expiry_date')->value;
   }
 
   /**
@@ -378,31 +378,30 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    /*
+     * @Todo the current version of drupal doesn't allow implementations of
+     * datetime to function the way it's required in this module. Expiry
+     * date has been implemented using the configuration exports but should be
+     * implemented programmatically if and when possible.
+     *
     $fields['expiry_date'] = BaseFieldDefinition::create('datetime')
-      ->setLabel(t('Expiry Date of the Asset'))
-      ->setDescription(t('The date corresponding to an assets expiry date.'))
-      ->setRevisionable(TRUE)
-      ->setSettings([
-        'datetime_type' => 'date',
-      ])
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'datetime_default',
-        'settings' => [
-          'format_type' => 'html_date',
-        ],
-        'weight' => -1,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'datetime_default',
-        'weight' => -1,
-        'settings' => [
-          'format_type' => 'html_date',
-        ],
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+    ->setLabel(t('Expiry Date of the Asset'))
+    ->setDescription(t('The date corresponding to an assets expiry date.'))
+    ->setRevisionable(TRUE)
+    ->setSettings([
+    'datetime_type' => 'datetime',
+    'offset' => TRUE,
+    ])
+    ->setDisplayOptions('view', [
+    'label' => 'above',
+    'weight' => -1,
+    ])
+    ->setDisplayOptions('form', [
+    'weight' => -1,
+    ])
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+     */
 
     return $fields;
   }
