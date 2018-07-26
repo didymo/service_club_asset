@@ -403,9 +403,10 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
     ->setDisplayConfigurable('view', TRUE);
      */
 
+    // This creates a field allowing the asset to reference another asset.
     $fields['related_assets'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Related Assets'))
-      ->setDescription(t('Related assets creates database links to other assets.'))
+      ->setDescription(t('Related assets creates links to other assets.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'asset_entity')
       ->setSetting('handler', 'default')
