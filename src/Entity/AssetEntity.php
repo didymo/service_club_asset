@@ -250,7 +250,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ])
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
-        'weight' => 5,
+        'weight' => 7,
         'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
@@ -273,11 +273,11 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -290,7 +290,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDefaultValue(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'weight' => 1,
+        'weight' => 5,
       ]);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -319,12 +319,12 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'default',
-        'weight' => 0,
+        'weight' => 3,
       ])
       ->setDisplayOptions('form', [
         'label' => 'hidden',
         'type' => 'image_image',
-        'weight' => 0,
+        'weight' => 3,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -341,11 +341,11 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -3,
+        'weight' => 1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -3,
+        'weight' => 1,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -369,11 +369,11 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'numeric',
-        'weight' => -1,
+        'weight' => 4,
       ])
       ->setDisplayOptions('form', [
         'type' => 'numeric',
-        'weight' => -1,
+        'weight' => 4,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
