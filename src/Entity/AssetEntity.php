@@ -403,6 +403,30 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
     ->setDisplayConfigurable('view', TRUE);
      */
 
+    $fields['related_assets'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Related Assets'))
+      ->setDescription(t('Related assets creates database links to other assets.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'asset_entity')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'string',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 6,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     return $fields;
   }
 
