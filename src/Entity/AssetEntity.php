@@ -69,6 +69,7 @@ use Drupal\user\UserInterface;
  *   "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert/{langcode}",
  *     "collection" = "/admin/structure/asset_entity",
  *     "clone-asset" = "/admin/structure/asset_entity/{asset_entity}/clone",
+ *     "related-assets" = "/admin/structure/asset_entity/{asset_entity}/related_assets",
  *   },
  *   field_ui_base_route = "asset_entity.settings"
  * )
