@@ -4,6 +4,7 @@ namespace Drupal\service_club_asset\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\service_club_asset\Entity\AssetEntity;
 
 /**
  * Class AssetRelationship.
@@ -24,7 +25,7 @@ class AssetRelationship extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Submit'),
+      '#value' => $this->t('Save'),
     ];
 
     return $form;
