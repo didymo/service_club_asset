@@ -8,7 +8,7 @@ dependencies:
     - datetime
     - service_club_asset
 _core:
-  default_config_hash: ecBUuiZQ1mHBa71-Hq0k2RX6YEAlZwx_BTDdCCJtIkQ
+  default_config_hash: _0ZUtde7_d4PsbNpDhlSDMnwhfjwB5N05FxnagUkVn0
 id: view_assets
 label: 'View Assets'
 module: views
@@ -387,7 +387,18 @@ display:
           entity_field: name
           plugin_id: standard
       title: 'View Assets'
-      header: {  }
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content: '<a href="/admin/structure/asset_entity/add" class="button button-action button--primary button--small" data-drupal-link-system-path="admin/structure/asset_entity/add">Add Asset entity</a>'
+          plugin_id: text_custom
       footer: {  }
       empty: {  }
       relationships: {  }
