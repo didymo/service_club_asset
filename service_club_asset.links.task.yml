@@ -19,6 +19,11 @@ entity.asset_entity.clone_asset:
   base_route: entity.asset_entity.canonical
   title: 'Clone'
 
+entity.asset_entity.asset_relationship:
+  route_name: entity.asset_entity.related_assets
+  base_route: entity.asset_entity.canonical
+  title: 'Related Assets'
+
 entity.asset_entity.version_history:
   route_name: entity.asset_entity.version_history
   base_route: entity.asset_entity.canonical

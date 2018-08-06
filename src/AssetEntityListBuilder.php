@@ -51,6 +51,14 @@ class AssetEntityListBuilder extends EntityListBuilder {
       ];
     }
 
+    if ($entity->access('related-assets') && $entity->hasLinkTemplate('related-assets')) {
+      $operations['related_assets'] = [
+        'title' => $this->t('Related Assets'),
+        'weight' => 1001,
+        'url' => $this->ensureDestination($entity->toUrl('related-assets')),
+      ];
+    }
+
     return $operations + parent::getDefaultOperations($entity);
   }
 

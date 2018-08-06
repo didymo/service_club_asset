@@ -69,6 +69,7 @@ use Drupal\user\UserInterface;
  *   "/admin/structure/asset_entity/{asset_entity}/revisions/{asset_entity_revision}/revert/{langcode}",
  *     "collection" = "/admin/structure/asset_entity",
  *     "clone-asset" = "/admin/structure/asset_entity/{asset_entity}/clone",
+ *     "related-assets" = "/admin/structure/asset_entity/{asset_entity}/related_assets",
  *   },
  *   field_ui_base_route = "asset_entity.settings"
  * )
@@ -250,7 +251,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ])
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
-        'weight' => 5,
+        'weight' => 7,
         'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
@@ -273,11 +274,11 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -290,7 +291,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDefaultValue(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'weight' => 1,
+        'weight' => 5,
       ]);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -319,12 +320,12 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'default',
-        'weight' => 0,
+        'weight' => 3,
       ])
       ->setDisplayOptions('form', [
         'label' => 'hidden',
         'type' => 'image_image',
-        'weight' => 0,
+        'weight' => 3,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -341,11 +342,11 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -3,
+        'weight' => 1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -3,
+        'weight' => 1,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -369,11 +370,11 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'numeric',
-        'weight' => -1,
+        'weight' => 4,
       ])
       ->setDisplayOptions('form', [
         'type' => 'numeric',
-        'weight' => -1,
+        'weight' => 4,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -402,6 +403,31 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
     ->setDisplayConfigurable('form', TRUE)
     ->setDisplayConfigurable('view', TRUE);
      */
+
+    // This creates a field allowing the asset to reference another asset.
+    $fields['related_assets'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Related Assets'))
+      ->setDescription(t('Related assets creates links to other assets.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'asset_entity')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'string',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 6,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }

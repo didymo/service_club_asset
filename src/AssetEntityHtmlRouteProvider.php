@@ -50,6 +50,10 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
       $collection->add("entity.$entity_type_id.clone_asset", $clone_asset_route);
     }
 
+    if ($related_assets_route = $this->getAssetRelationshipRoute($entity_type)) {
+      $collection->add("entity.$entity_type_id.related_assets", $related_assets_route);
+    }
+
     return $collection;
   }
 
@@ -71,6 +75,30 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
           '_form' => '\Drupal\service_club_asset\Form\CloneAssetForm',
         ])
         ->setRequirement('_permission', 'clone asset')
+        ->setOption('_admin_route', TRUE);
+
+      return $route;
+    }
+  }
+
+  /**
+   * Gets the asset relationship route.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return Symfony\Component\Routing\Route
+   *   The generated route, if available.
+   */
+  protected function getAssetRelationshipRoute(EntityTypeInterface $entity_type) {
+    if ($entity_type->hasLinkTemplate('related-assets')) {
+      $route = new Route($entity_type->getLinkTemplate('related-assets'));
+      $route
+        ->setDefaults([
+          '_title' => "Related Assets",
+          '_form' => '\Drupal\service_club_asset\Form\AssetRelationship',
+        ])
+        ->setRequirement('_permission', 'related assets')
         ->setOption('_admin_route', TRUE);
 
       return $route;
