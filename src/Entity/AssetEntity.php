@@ -368,13 +368,6 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    /*
-     * @Todo change the type from decimal to something more appropriate such
-     * as String, price or Integer.
-     *
-     * The limitation of using decimal is that you cannot store an 8 digit
-     * number or large 7 digit numbers as it is causing issues for storage.
-     */
     $fields['price'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Asset Price/Value'))
       ->setDescription(t("Please provide the asset\'s price"))
