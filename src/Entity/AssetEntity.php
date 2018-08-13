@@ -145,6 +145,21 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
   /**
    * {@inheritdoc}
    */
+  public function getPrice() {
+    return $this->get('price')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPrice($price) {
+    $this->set('price', $price);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -360,21 +375,20 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
      * The limitation of using decimal is that you cannot store an 8 digit
      * number or large 7 digit numbers as it is causing issues for storage.
      */
-    $fields['price'] = BaseFieldDefinition::create('decimal')
+    $fields['price'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Asset Price/Value'))
       ->setDescription(t("Please provide the asset\'s price"))
       ->setSettings([
-        'type' => 'numeric',
-        'precision' => 32,
-        'scale' => 2,
+        'max_length' => 50,
+        'text_processing' => 0,
       ])
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'numeric',
+        'type' => 'string',
         'weight' => 4,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'numeric',
+        'type' => 'string',
         'weight' => 4,
       ])
       ->setDisplayConfigurable('form', TRUE)
