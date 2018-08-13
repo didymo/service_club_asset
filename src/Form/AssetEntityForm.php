@@ -4,6 +4,7 @@ namespace Drupal\service_club_asset\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\service_club_asset\Entity\AssetEntity;
 
 /**
  * Form controller for Asset entity edit forms.
@@ -31,6 +32,27 @@ class AssetEntityForm extends ContentEntityForm {
     $entity = $this->entity;
 
     return $form;
+  }
+
+  /**
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\Entity\ContentEntityTypeInterface|void
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Call the original validateForm function.
+    $entity = parent::validateForm($form, $form_state);
+
+    // Guardian IF ensuring that we are looking at an Asset Entity.
+    if ($entity instanceof AssetEntity) {
+      // Check the price to ensure it's a valid number or is blank.
+      if (!(is_numeric($entity->getPrice()) || $entity->getPrice() == '')) {
+        $form_state->setErrorByName('price', $this->t('Given price was not a valid value.'));
+      }
+    }
+
+    return $entity;
   }
 
   /**
