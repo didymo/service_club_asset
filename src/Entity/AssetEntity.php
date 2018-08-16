@@ -250,6 +250,36 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
   /**
    * {@inheritdoc}
    */
+  public function getChildRelationships() {
+    return $this->get('child_related_assets')->getValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setChildRelationships($relationship) {
+    $this->set('child_related_assets', $relationship);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParentId() {
+    return $this->get('parent_related_assets')->getValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setParentId($relationship) {
+    $this->set('parent_related_assets', $relationship);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
@@ -412,10 +442,37 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
     ->setDisplayConfigurable('view', TRUE);
      */
 
-    // This creates a field allowing the asset to reference another asset.
-    $fields['related_assets'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Related Assets'))
+    // This creates a field allowing the asset to reference an array of assets.
+    $fields['child_related_assets'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Child Related Assets'))
       ->setDescription(t('Related assets creates links to other assets.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'asset_entity')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'string',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 7,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    // This creates a field allowing the asset to reference it's parent asset.
+    // There can only be one parent asset associated with another asset.
+    $fields['parent_related_assets'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Parent Asset'))
+      ->setDescription(t('Parent asset creates a link to an asset it is dependent upon.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'asset_entity')
       ->setSetting('handler', 'default')
@@ -435,8 +492,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
         ],
       ])
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE)
-      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }
