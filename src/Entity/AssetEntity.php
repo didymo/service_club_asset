@@ -272,8 +272,8 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
   /**
    * {@inheritdoc}
    */
-  public function setParentId($relationship) {
-    $this->set('parent_related_assets', $relationship);
+  public function setParentId($parent) {
+    $this->set('parent_related_assets', $parent);
     return $this;
   }
 
