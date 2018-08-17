@@ -52,6 +52,13 @@ class AssetEntityForm extends ContentEntityForm {
       }
     }
 
+    $current_asset = AssetEntity::load(22);
+
+    //print_r($current_asset);
+    //print_r($entity->getOriginalId());
+    //$this->logger('relations')->error($entity->id());
+    //$form_state->setErrorByName('pause', $this->t('Trying to halt execution'));
+
     return $entity;
   }
 
@@ -88,6 +95,20 @@ class AssetEntityForm extends ContentEntityForm {
         ]));
     }
     $form_state->setRedirect('entity.asset_entity.canonical', ['asset_entity' => $entity->id()]);
+
+    // Load the current asset.
+    $current_asset = AssetEntity::load($entity->id());
+
+    // Set the child asset's parent to the current asset.
+    for ($counter = 0; $counter < count($current_asset->getChildRelationships()); $counter++) {
+      // Load the child asset so that values can be set.
+      $child_asset = AssetEntity::load($current_asset->getChildRelationships()[$counter]['target_id']);
+      //$this->logger('relations')->error($current_asset->id());
+
+      // Set the child asset's parent to the current asset.
+      //['target_id' => $current_asset->id()]
+      $child_asset->setParentId(['x-default' => $current_asset->id()]);
+    }
   }
 
 }
