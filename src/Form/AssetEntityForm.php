@@ -52,7 +52,9 @@ class AssetEntityForm extends ContentEntityForm {
       }
     }
 
-    $current_asset = AssetEntity::load(22);
+    $current_asset = AssetEntity::load($entity->id());
+
+
 
     //print_r($current_asset);
     //print_r($entity->getOriginalId());
@@ -103,11 +105,18 @@ class AssetEntityForm extends ContentEntityForm {
     for ($counter = 0; $counter < count($current_asset->getChildRelationships()); $counter++) {
       // Load the child asset so that values can be set.
       $child_asset = AssetEntity::load($current_asset->getChildRelationships()[$counter]['target_id']);
-      //$this->logger('relations')->error($current_asset->id());
 
       // Set the child asset's parent to the current asset.
-      //['target_id' => $current_asset->id()]
-      $child_asset->setParentId(['x-default' => $current_asset->id()]);
+      $child_asset->set('parent_related_assets', $current_asset->id());
+
+      // Save the changes to the children assets.
+      try {
+        $child_asset->save();
+      }
+      catch (EntityStorageException $e) {
+        $this->logger('AssetEntityForm')
+          ->error('Failed to save the child asset when setting it\'s parent. The child id is ' . $child_asset->id());
+      }
     }
   }
 
