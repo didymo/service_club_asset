@@ -50,16 +50,24 @@ class AssetEntityForm extends ContentEntityForm {
       if (!(is_numeric($entity->getPrice()) || $entity->getPrice() == '')) {
         $form_state->setErrorByName('price', $this->t('Given price was not a valid value.'));
       }
+
+      // Check to ensure each child isn't associated with another parent.
+      for ($counter = 0; $counter < count($entity->getChildRelationships()); $counter++) {
+        // Load the child asset so that values can be set.
+        $child_asset = AssetEntity::load($entity->getChildRelationships()[$counter]['target_id']);
+
+        // Get the child's parent id value.
+        $possible_parent = $child_asset->getParentId();
+
+        // If the child has a parent that isn't the current asset then it
+        // already has an association.
+        if ($possible_parent != $entity->id() && $possible_parent != '') {
+          $form_state->setErrorByName('pause',
+            ("Child ID: " . $child_asset->id() .
+              " has a parental association with another asset. ID: " . $possible_parent));
+        }
+      }
     }
-
-    $current_asset = AssetEntity::load($entity->id());
-
-
-
-    //print_r($current_asset);
-    //print_r($entity->getOriginalId());
-    //$this->logger('relations')->error($entity->id());
-    //$form_state->setErrorByName('pause', $this->t('Trying to halt execution'));
 
     return $entity;
   }
@@ -107,7 +115,7 @@ class AssetEntityForm extends ContentEntityForm {
       $child_asset = AssetEntity::load($current_asset->getChildRelationships()[$counter]['target_id']);
 
       // Set the child asset's parent to the current asset.
-      $child_asset->set('parent_related_assets', $current_asset->id());
+      $child_asset->setParentId($current_asset->id());
 
       // Save the changes to the children assets.
       try {
@@ -117,6 +125,24 @@ class AssetEntityForm extends ContentEntityForm {
         $this->logger('AssetEntityForm')
           ->error('Failed to save the child asset when setting it\'s parent. The child id is ' . $child_asset->id());
       }
+    }
+
+    // Automatically complete relationship with parent asset.
+    if ($current_asset->getParentId() != '') {
+      // Load the parent Asset.
+      $parent_asset = AssetEntity::load($current_asset->getParentId());
+
+      $total_children = count($parent_asset->getChildRelationships());
+
+      // Get the child list of the parent asset and append the current asset
+      // to that list.
+      $children_list = $parent_asset->getChildRelationships();
+      $children_list += [$total_children => ['target_id' => $current_asset->id()]];
+
+      // Set the current asset to be a child of it's parent.
+      $parent_asset->setChildRelationships($children_list);
+
+      $parent_asset->save();
     }
   }
 
