@@ -67,6 +67,17 @@ class AssetEntityForm extends ContentEntityForm {
               " has a parental association with another asset. ID: " . $possible_parent));
         }
       }
+
+      if ($entity->getParentId() != '') {
+        // Load the actual parent to be passed into dependency checker.
+        $parent_asset = AssetEntity::load($entity->getParentId());
+
+        // If there is a circular dependency then halt the save.
+        if ($this->circularDependency($entity, $parent_asset)) {
+          $form_state->setErrorByName('circular_dependency',
+            $this->t('There is a cirular relationship which is not permitted.'));
+        }
+      }
     }
 
     return $entity;
@@ -93,7 +104,7 @@ class AssetEntityForm extends ContentEntityForm {
       // Circular dependency found.
       $dependency = TRUE;
     }
-    elseif ($parent_asset->id() != '') {
+    elseif ($parent_asset->getParentId() != '') {
       // There is another parent to check.
       $next_parent = AssetEntity::load($parent_asset->getParentId());
       $this->circularDependency($current_asset, $next_parent);
