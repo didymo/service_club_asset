@@ -73,6 +73,37 @@ class AssetEntityForm extends ContentEntityForm {
   }
 
   /**
+   * Finds circular dependencies between assets.
+   *
+   * @param \Drupal\service_club_asset\Entity\AssetEntity $current_asset
+   *   The current_asset is the asset currently being validated.
+   * @param \Drupal\service_club_asset\Entity\AssetEntity $parent_asset
+   *   This is the parent of current_asset.
+   *
+   * @return bool
+   *   True when a circular dependency is found, False when there isn't a
+   *   circular dependency
+   */
+  public function circularDependency(AssetEntity $current_asset, AssetEntity $parent_asset) {
+    // Static variable to exist through recursion. Initially false.
+    static $dependency = FALSE;
+
+    // Finite state machine to make decision.
+    if ($parent_asset->id() == $current_asset->id()) {
+      // Circular dependency found.
+      $dependency = TRUE;
+    }
+    elseif ($parent_asset->id() != '') {
+      // There is another parent to check.
+      $next_parent = AssetEntity::load($parent_asset->getParentId());
+      $this->circularDependency($current_asset, $next_parent);
+    }
+
+    // No more parents in the chain.
+    return $dependency;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
