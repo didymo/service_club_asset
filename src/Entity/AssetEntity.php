@@ -266,7 +266,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    * {@inheritdoc}
    */
   public function getParentId() {
-    return $this->get('parent_related_assets')->getValue();
+    return $this->get('parent_related_assets')->target_id;
   }
 
   /**
