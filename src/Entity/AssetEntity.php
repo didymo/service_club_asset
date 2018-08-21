@@ -9,6 +9,7 @@ use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the Asset entity entity.
@@ -144,6 +145,21 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
   /**
    * {@inheritdoc}
    */
+  public function getPrice() {
+    return $this->get('price')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPrice($price) {
+    $this->set('price', $price);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -228,6 +244,36 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    */
   public function setPublished($published) {
     $this->set('status', $published ? TRUE : FALSE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChildRelationships() {
+    return $this->get('child_related_assets')->getValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setChildRelationships($relationship) {
+    $this->set('child_related_assets', $relationship);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParentId() {
+    return $this->get('parent_related_assets')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setParentId($parent) {
+    $this->set('parent_related_assets', $parent);
     return $this;
   }
 
@@ -352,28 +398,20 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    /*
-     * @Todo change the type from decimal to something more appropriate such
-     * as String, price or Integer.
-     *
-     * The limitation of using decimal is that you cannot store an 8 digit
-     * number or large 7 digit numbers as it is causing issues for storage.
-     */
-    $fields['price'] = BaseFieldDefinition::create('decimal')
+    $fields['price'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Asset Price/Value'))
       ->setDescription(t("Please provide the asset\'s price"))
       ->setSettings([
-        'type' => 'numeric',
-        'precision' => 32,
-        'scale' => 2,
+        'max_length' => 50,
+        'text_processing' => 0,
       ])
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'numeric',
+        'type' => 'string',
         'weight' => 4,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'numeric',
+        'type' => 'string',
         'weight' => 4,
       ])
       ->setDisplayConfigurable('form', TRUE)
@@ -404,10 +442,37 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
     ->setDisplayConfigurable('view', TRUE);
      */
 
-    // This creates a field allowing the asset to reference another asset.
-    $fields['related_assets'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Related Assets'))
+    // This creates a field allowing the asset to reference an array of assets.
+    $fields['child_related_assets'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Child Related Assets'))
       ->setDescription(t('Related assets creates links to other assets.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'asset_entity')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'string',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 7,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    // This creates a field allowing the asset to reference it's parent asset.
+    // There can only be one parent asset associated with another asset.
+    $fields['parent_related_assets'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Parent Asset'))
+      ->setDescription(t('Parent asset creates a link to an asset it is dependent upon.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'asset_entity')
       ->setSetting('handler', 'default')

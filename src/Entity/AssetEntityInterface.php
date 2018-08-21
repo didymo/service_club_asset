@@ -35,6 +35,22 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
   public function setName($name);
 
   /**
+   * Gets the Asset entity's price.
+   *
+   * @return string
+   *   Price of the Asset entity.
+   */
+  public function getPrice();
+
+  /**
+   * Sets the Asset's price.
+   *
+   * @param string $price
+   *   Value of the price.
+   */
+  public function setPrice($price);
+
+  /**
    * Gets the Asset entity creation timestamp.
    *
    * @return int
@@ -125,7 +141,7 @@ interface AssetEntityInterface extends ContentEntityInterface, RevisionLogInterf
    * Sets the description for an asset.
    *
    * @param string $description
-   The assets description
+   *   The assets description.
    *
    * @return \Drupal\service_club_asset\Entity\AssetEntityInterface
    *   The called asset entity.
