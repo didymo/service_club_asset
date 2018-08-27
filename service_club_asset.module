@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\service_club_asset\Entity\AssetEntity;
 
 /**
  * Implements hook_help().
@@ -20,6 +21,25 @@ function service_club_asset_help($route_name, RouteMatchInterface $route_match) 
       return $output;
 
     default:
+  }
+}
+
+/**
+ * Cron job for Asset Entities checking if it has expired.
+ */
+function service_club_asset_cron() {
+  // Load all the assets into an array.
+  $assets = AssetEntity::loadMultiple();
+
+  // Create a queue to load the assets into for the next cron run.
+  $queue = \Drupal::queue('asset_entity_processor');
+
+  // Check the asset has an expiry.
+  foreach ($assets as $asset) {
+    // No date is recognised as empty so if it isn't empty queue the asset.
+    if (!empty($asset->getExpiryDate())) {
+      $queue->createItem($asset);
+    }
   }
 }
 
