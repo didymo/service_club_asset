@@ -4,11 +4,14 @@ dependencies:
   config:
     - field.storage.asset_entity.field_expiry_date
     - system.menu.main
+    - user.role.administrator
+    - user.role.asset_manager
   module:
     - datetime
     - service_club_asset
+    - user
 _core:
-  default_config_hash: OF_mC09Dp85RooXKRQAM7MGVPzVqTZOWf7hfXNkdpSA
+  default_config_hash: benHJT4AKYvBfekD4J6F-9i8_c2mmPUdWOMtRZlYwIM
 id: view_assets
 label: 'View Assets'
 module: views
@@ -25,8 +28,11 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            administrator: administrator
+            asset_manager: asset_manager
       cache:
         type: tag
         options: {  }
@@ -598,6 +604,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.asset_entity.field_expiry_date'
   page_1:
@@ -624,5 +631,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.asset_entity.field_expiry_date'
