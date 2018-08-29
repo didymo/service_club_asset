@@ -190,7 +190,7 @@ class AssetEntity extends RevisionableContentEntityBase implements AssetEntityIn
    * {@inheritdoc}
    */
   public function setExpiryDate($expiry_date) {
-    $this->set('expiry_date', $expiry_date);
+    $this->set('field_expiry_date', $expiry_date);
     return $this;
   }
 
