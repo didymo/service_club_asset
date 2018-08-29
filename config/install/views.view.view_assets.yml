@@ -11,7 +11,7 @@ dependencies:
     - service_club_asset
     - user
 _core:
-  default_config_hash: benHJT4AKYvBfekD4J6F-9i8_c2mmPUdWOMtRZlYwIM
+  default_config_hash: hey5H77rmz22qeG0_jb6G3F1ox_1vyLdJZoinlhDc2k
 id: view_assets
 label: 'View Assets'
 module: views
@@ -507,7 +507,7 @@ display:
                   min: '+ 0 day'
                   max: '+ 90 day'
               3:
-                title: '3 - 6 moths'
+                title: '3 - 6 months'
                 operator: between
                 value:
                   type: offset
@@ -579,7 +579,7 @@ display:
           entity_type: asset_entity
           entity_field: id
           plugin_id: standard
-      title: 'View Assets'
+      title: Assets
       header:
         area_text_custom:
           id: area_text_custom
@@ -617,7 +617,7 @@ display:
       path: view-assets
       menu:
         type: normal
-        title: 'View Assets'
+        title: Assets
         description: ''
         expanded: false
         parent: ''
