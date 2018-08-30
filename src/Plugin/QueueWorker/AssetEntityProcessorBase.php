@@ -28,7 +28,7 @@ abstract class AssetEntityProcessorBase extends QueueWorkerBase implements Conta
   /**
    * The logger.
    *
-   * @var \Psr\Log\LoggerInterface
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
   protected $logger;
 
