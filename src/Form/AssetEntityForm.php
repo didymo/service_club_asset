@@ -66,6 +66,20 @@ class AssetEntityForm extends ContentEntityForm {
             ("Child ID: " . $child_asset->id() .
               " already has a parental association with another asset. ID: " . $possible_parent));
         }
+
+        /*
+         * In the special case that the current asset's child is itself, the
+         * circular dependency will not catch this issue and save the asset.
+         * To prevent this the following if checks if the current asset has
+         * itself as a child.
+         *
+         * Variable $entity->id() will be empty when an asset is first created
+         * so this will not trigger.
+         */
+        if ($entity->id() === $child_asset->id()) {
+          $form_state->setErrorByName('circular_dependency',
+            $this->t('An asset is not permitted to be a child of itself.'));
+        }
       }
 
       if (!empty($entity->getParentId())) {
