@@ -47,7 +47,7 @@ class AssetEntityForm extends ContentEntityForm {
     // Guardian IF ensuring that we are looking at an Asset Entity.
     if ($entity instanceof AssetEntity) {
       // Check the price to ensure it's a valid number or is blank.
-      if (!(is_numeric($entity->getPrice()) || $entity->getPrice() == '')) {
+      if (!(is_numeric($entity->getPrice()) || empty($entity->getPrice()))) {
         $form_state->setErrorByName('price', $this->t('Given price was not a valid value.'));
       }
 
@@ -61,14 +61,14 @@ class AssetEntityForm extends ContentEntityForm {
 
         // If the child has a parent that isn't the current asset then it
         // already has an association.
-        if ($possible_parent != $entity->id() && $possible_parent != '') {
-          $form_state->setErrorByName('pause',
+        if ($possible_parent !== $entity->id() && !empty($possible_parent)) {
+          $form_state->setErrorByName('existing parent relationship',
             ("Child ID: " . $child_asset->id() .
-              " has a parental association with another asset. ID: " . $possible_parent));
+              " already has a parental association with another asset. ID: " . $possible_parent));
         }
       }
 
-      if ($entity->getParentId() != '') {
+      if (!empty($entity->getParentId())) {
         // Load the actual parent to be passed into dependency checker.
         $parent_asset = AssetEntity::load($entity->getParentId());
 
@@ -100,11 +100,11 @@ class AssetEntityForm extends ContentEntityForm {
     static $dependency = FALSE;
 
     // Finite state machine to make decision.
-    if ($parent_asset->id() == $current_asset->id()) {
+    if ($parent_asset->id() === $current_asset->id()) {
       // Circular dependency found.
       $dependency = TRUE;
     }
-    elseif ($parent_asset->getParentId() != '') {
+    elseif (!empty($parent_asset->getParentId())) {
       // There is another parent to check.
       $next_parent = AssetEntity::load($parent_asset->getParentId());
       $this->circularDependency($current_asset, $next_parent);
@@ -162,15 +162,14 @@ class AssetEntityForm extends ContentEntityForm {
       // Save the changes to the children assets.
       try {
         $child_asset->save();
-      }
-      catch (EntityStorageException $e) {
+      } catch (EntityStorageException $e) {
         $this->logger('AssetEntityForm')
           ->error('Failed to save the child asset when setting it\'s parent. The child id is ' . $child_asset->id());
       }
     }
 
     // Automatically complete relationship with parent asset.
-    if ($current_asset->getParentId() != '') {
+    if (!empty($current_asset->getParentId())) {
       // Load the parent Asset.
       $parent_asset = AssetEntity::load($current_asset->getParentId());
 
