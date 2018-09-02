@@ -134,7 +134,7 @@ class AssetEntityForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
 
-    // Set initial value of parent changed to false.
+    // Set initial value of parent changed to false to cover entity creation.
     $parent_changed = FALSE;
     $children_changed = FALSE;
 
@@ -147,45 +147,8 @@ class AssetEntityForm extends ContentEntityForm {
       $parent_changed = $form_state->getValue('parent_related_assets')[0]['target_id'] !== $current_asset->getParentId() ? TRUE : FALSE;
       $previous_parent_id = $current_asset->getParentId();
 
-
-      // Load the previous child asset list.
-      $previous_children_list = $current_asset->getChildRelationships();
-
-      // Create an empty map to store the id of the previous children.
-      $previous_child_id_list = [];
-
-      // Create the map of children id's.
-      foreach ($previous_children_list as $previous_child) {
-        $previous_child_id_list += [$previous_child['target_id'] => 1];
-      }
-
-      // Get the new children list.
-      $new_children_list = $form_state->getValue('child_related_assets');
-      foreach ($new_children_list as $new_child) {
-        // Ignore the case when an empty block is left in the form.
-        if (!empty([$new_child['target_id']])) {
-
-          // If it's empty it's a new child we can ignore here.
-          if (!empty($previous_child_id_list[$new_child['target_id']])) {
-            // Check if a child has been removed.
-            if ($previous_child_id_list[$new_child['target_id']] === 1) {
-              $previous_child_id_list[$new_child['target_id']] = 2;
-            }
-          }
-        }
-      }
-
-      // The list will store children who have been removed.
-      $changed_children_list = [];
-
-      // Check if a child has been removed.
-      foreach ($previous_child_id_list as $child_id => $changed) {
-        if ($changed === 1) {
-          $changed_children_list += [$child_id];
-        }
-
-      }
-
+      // Check if the given children list has changed.
+      $changed_children_list = $this->checkChildrenChange($current_asset, $form_state->getValue('child_related_assets'));
       $children_changed = count($changed_children_list) === 0 ? FALSE : TRUE;
 
     }
@@ -245,32 +208,7 @@ class AssetEntityForm extends ContentEntityForm {
 
     // Automatically complete relationship with parent asset.
     if (!empty($current_asset->getParentId())) {
-      // Load the parent Asset.
-      $parent_asset = AssetEntity::load($current_asset->getParentId());
-
-      $total_children = count($parent_asset->getChildRelationships());
-
-      // Get the child list of the parent asset and append the current asset
-      // to that list.
-      $children_list = $parent_asset->getChildRelationships();
-      $children_list += [$total_children => ['target_id' => $current_asset->id()]];
-
-      $unique_children_list = [];
-      foreach ($children_list as $child) {
-        // If the same child appears twice it will overwrite the previous child.
-        $unique_children_list += [$child['target_id'] => $child];
-      }
-
-      // Set the current asset to be a child of it's parent.
-      $parent_asset->setChildRelationships($unique_children_list);
-
-      // Save the changes to the parent asset.
-      try {
-        $parent_asset->save();
-      } catch (EntityStorageException $e) {
-        $this->logger('AssetEntityForm')
-          ->error('Failed to save the parent asset when setting it\'s child. The parent id is ' . $parent_asset->id());
-      }
+      $this->addAssetToParent($current_asset->getParentId(), $current_asset->id());
     }
 
     // Automatically deal with assets if parent changes.
@@ -281,6 +219,91 @@ class AssetEntityForm extends ContentEntityForm {
     // Automatically deal with assets if children change.
     if ($children_changed) {
       $this->removeParentFromChildren($changed_children_list);
+    }
+  }
+
+  /**
+   * @param \Drupal\service_club_asset\Entity\AssetEntity $current_asset
+   * @param array $new_children_list
+   *
+   * @return array
+   */
+  public function checkChildrenChange(AssetEntity $current_asset, array $new_children_list) {
+    // Load the previous child asset list.
+    $previous_children_list = $current_asset->getChildRelationships();
+
+    // Create an empty map to store the id of the previous children.
+    $previous_child_id_list = [];
+
+    // Create the map of children id's.
+    foreach ($previous_children_list as $previous_child) {
+      $previous_child_id_list += [$previous_child['target_id'] => 1];
+    }
+
+    // Get the new children list and loop.
+    foreach ($new_children_list as $new_child) {
+      // Ignore the case when an empty block is left in the form.
+      if (!empty([$new_child['target_id']])) {
+
+        // If it's empty it's a new child we can ignore here.
+        if (!empty($previous_child_id_list[$new_child['target_id']])) {
+          // Check if a child has been removed.
+          if ($previous_child_id_list[$new_child['target_id']] === 1) {
+            $previous_child_id_list[$new_child['target_id']] = 2;
+          }
+        }
+      }
+    }
+
+    // The list will store children who have been removed.
+    $changed_children_list = [];
+
+    // Check if a child has been removed.
+    foreach ($previous_child_id_list as $child_id => $changed) {
+      if ($changed === 1) {
+        $changed_children_list += [$child_id];
+      }
+    }
+
+    return $changed_children_list;
+  }
+
+  /**
+   * Add the current asset to it's parent's children list.
+   *
+   * @param \Drupal\service_club_asset\Form\int $parent_id
+   *   Id of the parent asset.
+   * @param \Drupal\service_club_asset\Form\int $current_asset_id
+   *   Id of the current asset.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function addAssetToParent(int $parent_id, int $current_asset_id) {
+    // Load the parent Asset.
+    $parent_asset = AssetEntity::load($parent_id);
+
+    $total_children = count($parent_asset->getChildRelationships());
+
+    // Get the child list of the parent asset and append the current asset
+    // to that list.
+    $children_list = $parent_asset->getChildRelationships();
+    $children_list += [$total_children => ['target_id' => $current_asset_id]];
+
+    $unique_children_list = [];
+    foreach ($children_list as $child) {
+      // If the same child appears twice it will overwrite the previous child.
+      $unique_children_list += [$child['target_id'] => $child];
+    }
+
+    // Set the current asset to be a child of it's parent.
+    $parent_asset->setChildRelationships($unique_children_list);
+
+    // Save the changes to the parent asset.
+    try {
+      $parent_asset->save();
+    } catch (EntityStorageException $e) {
+      $this->logger('AssetEntityForm')
+        ->error('Failed to save the parent asset when setting it\'s child. The parent id is ' . $parent_asset->id());
     }
   }
 
