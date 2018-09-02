@@ -223,10 +223,15 @@ class AssetEntityForm extends ContentEntityForm {
   }
 
   /**
+   * Checks if any assets have been removed and returns their Id's.
+   *
    * @param \Drupal\service_club_asset\Entity\AssetEntity $current_asset
+   *   The current asset before it's been saved and updated.
    * @param array $new_children_list
+   *   The updated list of asset children.
    *
    * @return array
+   *   Returns an array of Id's corresponding to assets that were removed.
    */
   public function checkChildrenChange(AssetEntity $current_asset, array $new_children_list) {
     // Load the previous child asset list.
