@@ -275,63 +275,89 @@ class AssetEntityForm extends ContentEntityForm {
 
     // Automatically deal with assets if parent changes.
     if ($parent_changed) {
-      // Ensure that there was previously a parent.
-      if (!empty($previous_parent_id)) {
-        $previous_parent = AssetEntity::load($previous_parent_id);
-
-        $children_list = $previous_parent->getChildRelationships();
-
-        // Find and remove the current asset from the children list.
-        $new_children_list = [];
-        foreach ($children_list as $child) {
-          if ($child['target_id'] !== $current_asset->id()) {
-            $new_children_list += [count($new_children_list) => $child];
-          }
-        }
-
-        // Save the children list without the current asset.
-        $previous_parent->setChildRelationships($new_children_list);
-
-        // Save the changes to the previous parent asset.
-        try {
-          $previous_parent->save();
-        } catch (EntityStorageException $e) {
-          $this->logger('AssetEntityForm')
-            ->error('Failed to save the previous parent asset when setting it\'s children. The parent id is ' . $previous_parent->id());
-        }
-      }
+      $this->removeAssetFromParent($previous_parent_id, $current_asset->id());
     }
 
     // Automatically deal with assets if children change.
     if ($children_changed) {
-      // Loop over each child that is no longer part of the list.
-      foreach ($changed_children_list as $child_id) {
-        $child_asset = AssetEntity::load($child_id);
+      $this->removeParentFromChildren($changed_children_list);
+    }
+  }
 
-        // Remove the parent.
-        $child_asset->setParentId('');
+  /**
+   * Disassociates current asset from parent.
+   *
+   * @param \Drupal\service_club_asset\Form\int $previous_parent_id
+   *   Id corresponding to previous parent.
+   * @param \Drupal\service_club_asset\Form\int $current_asset_id
+   *   Id corresponding to the current asset.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function removeAssetFromParent(int $previous_parent_id, int $current_asset_id) {
+    // Ensure that there was previously a parent.
+    if (!empty($previous_parent_id)) {
+      $previous_parent = AssetEntity::load($previous_parent_id);
 
-        // Save the changes to the child asset.
-        try {
-          $child_asset->save();
-        } catch (EntityStorageException $e) {
-          $this->logger('AssetEntityForm')
-            ->error('Failed to save the child asset while removing it\'s previous parent. The child id is ' . $child_asset->id());
+      $children_list = $previous_parent->getChildRelationships();
+
+      // Find and remove the current asset from the children list.
+      $new_children_list = [];
+      foreach ($children_list as $child) {
+        if ($child['target_id'] !== $current_asset_id) {
+          $new_children_list += [count($new_children_list) => $child];
         }
+      }
+
+      // Save the children list without the current asset.
+      $previous_parent->setChildRelationships($new_children_list);
+
+      // Save the changes to the previous parent asset.
+      try {
+        $previous_parent->save();
+      } catch (EntityStorageException $e) {
+        $this->logger('AssetEntityForm')
+          ->error('Failed to save the previous parent asset when setting it\'s children. The parent id is ' . $previous_parent->id());
       }
     }
   }
 
   /**
-   * Removes duplicate children from the list.
+   * Function removes current asset as parent from the current asset's children.
+   *
+   * @param array $changed_children_list
+   *   Is an array containing the id's of children which have been removed
+   *   from the relationship.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function removeParentFromChildren(array $changed_children_list) {
+    // Loop over each child that is no longer part of the list.
+    foreach ($changed_children_list as $child_id) {
+      $child_asset = AssetEntity::load($child_id);
+
+      // Remove the parent.
+      $child_asset->setParentId('');
+
+      // Save the changes to the child asset.
+      try {
+        $child_asset->save();
+      } catch (EntityStorageException $e) {
+        $this->logger('AssetEntityForm')
+          ->error('Failed to save the child asset while removing it\'s previous parent. The child id is ' . $child_asset->id());
+      }
+    }
+  }
+
+  /**
+   * Removes duplicate children from the current asset.
    *
    * @param \Drupal\service_club_asset\Entity\AssetEntity $current_asset
    *   Is the asset with a children list to remove duplicates from.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public
-  function removeDuplicateChildren(AssetEntity $current_asset) {
+  public function removeDuplicateChildren(AssetEntity $current_asset) {
     $unique_children_list = [];
     foreach ($current_asset->getChildRelationships() as $child) {
       // If the same child appears twice it will overwrite the previous child.
