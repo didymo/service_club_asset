@@ -100,6 +100,13 @@ class CloneAssetForm extends FormBase {
    */
   public function cloneAsset(AssetEntity $asset_entity) {
     $asset_clone = $asset_entity->createDuplicate();
+
+    // Remove children dependencies.
+    $asset_clone->setChildRelationships([]);
+
+    // Remove the parent dependency.
+    $asset_clone->setParentId('');
+
     try {
       $asset_clone->save();
     }
