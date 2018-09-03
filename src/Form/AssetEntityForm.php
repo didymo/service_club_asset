@@ -162,7 +162,6 @@ class AssetEntityForm extends ContentEntityForm {
       $entity->setRevisionCreationTime(REQUEST_TIME);
       $entity->setRevisionUserId(\Drupal::currentUser()->id());
     }
-
     else {
       $entity->setNewRevision(FALSE);
     }
@@ -213,7 +212,9 @@ class AssetEntityForm extends ContentEntityForm {
 
     // Automatically deal with assets if parent changes.
     if ($parent_changed) {
-      $this->removeAssetFromParent($previous_parent_id, $current_asset->id());
+      if (!empty($previous_parent_id)) {
+        $this->removeAssetFromParent($previous_parent_id, $current_asset);
+      }
     }
 
     // Automatically deal with assets if children change.
@@ -322,32 +323,31 @@ class AssetEntityForm extends ContentEntityForm {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function removeAssetFromParent(int $previous_parent_id, int $current_asset_id) {
+  public function removeAssetFromParent(int $previous_parent_id, AssetEntity $current_asset) {
     // Ensure that there was previously a parent.
-    if (!empty($previous_parent_id)) {
-      $previous_parent = AssetEntity::load($previous_parent_id);
+    $previous_parent = AssetEntity::load($previous_parent_id);
 
-      $children_list = $previous_parent->getChildRelationships();
+    $children_list = $previous_parent->getChildRelationships();
 
-      // Find and remove the current asset from the children list.
-      $new_children_list = [];
-      foreach ($children_list as $child) {
-        if ($child['target_id'] !== $current_asset_id) {
-          $new_children_list += [count($new_children_list) => $child];
-        }
-      }
-
-      // Save the children list without the current asset.
-      $previous_parent->setChildRelationships($new_children_list);
-
-      // Save the changes to the previous parent asset.
-      try {
-        $previous_parent->save();
-      } catch (EntityStorageException $e) {
-        $this->logger('AssetEntityForm')
-          ->error('Failed to save the previous parent asset when setting it\'s children. The parent id is ' . $previous_parent->id());
+    // Find and remove the current asset from the children list.
+    $new_children_list = [];
+    foreach ($children_list as $child) {
+      if ($child['target_id'] != $current_asset->id()) {
+        $new_children_list += [count($new_children_list) => $child];
       }
     }
+
+    // Save the children list without the current asset.
+    $previous_parent->setChildRelationships($new_children_list);
+
+    // Save the changes to the previous parent asset.
+    try {
+      $previous_parent->save();
+    } catch (EntityStorageException $e) {
+      $this->logger('AssetEntityForm')
+        ->error('Failed to save the previous parent asset when setting it\'s children. The parent id is ' . $previous_parent->id());
+    }
+
   }
 
   /**
