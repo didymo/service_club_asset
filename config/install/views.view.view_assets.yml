@@ -11,7 +11,7 @@ dependencies:
     - service_club_asset
     - user
 _core:
-  default_config_hash: hey5H77rmz22qeG0_jb6G3F1ox_1vyLdJZoinlhDc2k
+  default_config_hash: rPDABX5GEIJqyNO_v7YEOnvSAwquXs5Tyh38KNOKzaY
 id: view_assets
 label: 'View Assets'
 module: views
@@ -81,7 +81,7 @@ display:
           override: true
           sticky: false
           caption: ''
-          summary: 'test summary title'
+          summary: ''
           description: ''
           columns:
             id: id
