@@ -12,6 +12,12 @@ delete asset entity entities:
 edit asset entity entities:
   title: 'Edit Asset entity entities'
 
+clone asset entity entities:
+  title: 'Clone asset entity entities'
+
+view related asset entity entities:
+  title: 'View related asset entity entities'
+
 view published asset entity entities:
   title: 'View published Asset entity entities'
 

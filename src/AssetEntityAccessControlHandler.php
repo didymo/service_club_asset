@@ -33,7 +33,7 @@ class AssetEntityAccessControlHandler extends EntityAccessControlHandler {
         return AccessResult::allowedIfHasPermission($account, 'clone asset entity entities');
 
       case 'related-assets':
-        return AccessResult::allowedIfHasPermission($account, 'related asset entity entities');
+        return AccessResult::allowedIfHasPermission($account, 'view related asset entity entities');
 
       case 'delete':
         return AccessResult::allowedIfHasPermission($account, 'delete asset entity entities');
