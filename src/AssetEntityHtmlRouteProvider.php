@@ -74,7 +74,7 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
           '_title' => "Clone Asset",
           '_form' => '\Drupal\service_club_asset\Form\CloneAssetForm',
         ])
-        ->setRequirement('_permission', 'clone asset')
+        ->setRequirement('_permission', 'clone asset entity entities')
         ->setOption('_admin_route', TRUE);
 
       return $route;
@@ -98,7 +98,7 @@ class AssetEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
           '_title' => "Related Assets",
           '_form' => '\Drupal\service_club_asset\Form\AssetRelationship',
         ])
-        ->setRequirement('_permission', 'related assets')
+        ->setRequirement('_permission', 'view related asset entity entities')
         ->setOption('_admin_route', TRUE);
 
       return $route;
