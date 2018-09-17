@@ -86,8 +86,14 @@ class AssetEntityForm extends ContentEntityForm {
         // Load the actual parent to be passed into dependency checker.
         $parent_asset = AssetEntity::load($entity->getParentId());
 
+        $child_ids = [];
+
+        foreach ($entity->getChildRelationships() as $child_id) {
+          $child_ids[] += $child_id['target_id'];
+        }
+
         // If there is a circular dependency then halt the save.
-        if ($this->circularDependency($entity, $parent_asset)) {
+        if ($this->circularDependency($entity, $parent_asset, $child_ids)) {
           $form_state->setErrorByName('circular_dependency',
             $this->t('There is a cirular relationship which is not permitted.'));
         }
@@ -109,19 +115,19 @@ class AssetEntityForm extends ContentEntityForm {
    *   True when a circular dependency is found, False when there isn't a
    *   circular dependency
    */
-  public function circularDependency(AssetEntity $current_asset, AssetEntity $parent_asset) {
+  public function circularDependency(AssetEntity $current_asset, AssetEntity $parent_asset, array $child_ids) {
     // Static variable to exist through recursion. Initially false.
     static $dependency = FALSE;
 
     // Finite state machine to make decision.
-    if ($parent_asset->id() === $current_asset->id()) {
+    if ($parent_asset->id() === $current_asset->id() || in_array($parent_asset->id(), $child_ids)) {
       // Circular dependency found.
       $dependency = TRUE;
     }
     elseif (!empty($parent_asset->getParentId())) {
       // There is another parent to check.
       $next_parent = AssetEntity::load($parent_asset->getParentId());
-      $this->circularDependency($current_asset, $next_parent);
+      $this->circularDependency($current_asset, $next_parent, $child_ids);
     }
 
     // No more parents in the chain.
