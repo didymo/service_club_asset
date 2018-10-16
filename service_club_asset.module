@@ -51,5 +51,9 @@ function service_club_asset_theme() {
     'service_club_asset' => [
       'render element' => 'children',
     ],
+    'asset_entity' => [
+      'template' => 'asset_entity',
+      'render element' => 'content',
+    ],
   ];
 }
